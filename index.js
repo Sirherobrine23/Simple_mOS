@@ -1,8 +1,8 @@
 const { resolve, join } = require("path");
-const { existsSync, readFileSync, writeFileSync, rmSync } = require("fs");
-const { cpus, freemem } = require("os")
-const { cwd, config } = require("process");
-const { execFile, execSync, execFileSync } = require("child_process");
+const { existsSync, readFileSync, writeFileSync, rmSync, copyFileSync } = require("fs");
+const { cpus, freemem, tmpdir } = require("os")
+const { cwd, exit } = require("process");
+const { exec, execFile, execFileSync, spawnSync, spawn, execSync } = require("child_process");
 const yaml = {parse: require("js-yaml").load, stringify: require("js-yaml").dump};
 const CurrentPath = (process.env.SAVE_FILES || cwd());
 
@@ -12,7 +12,9 @@ var OSConfig = {
     Before: {
         InstallMacOS: {
             enable: true,
-            system: "Catalina"
+            removeFiles: true,
+            system: 3,
+            SystemBasePath: join(CurrentPath, "BaseSystem.img")
         }
     },
     cpu: {
@@ -21,6 +23,7 @@ var OSConfig = {
         sockets: 1,
         family: "Penryn",
         options: "+pcid,+ssse3,+sse4.2,+popcnt,+avx,+aes,+xsave,+xsaveopt,check",
+        kvm: true
     },
     ram: Math.trunc(((freemem() / 2) / 1024 / 1024) - 24),
     devices: {
@@ -32,11 +35,9 @@ var OSConfig = {
             mac: "52:54:00:c9:18:27"
         },
         hd: {
-            SystemInstaller: {
-                path: join(CurrentPath, "BaseSystem.img")
-            },
             MacOS: {
                 path: join(CurrentPath, "MacOSHDD.img"),
+                file_name: "MacOSHDD.img",
                 size_gb: 128
             }
         }
@@ -45,13 +46,13 @@ var OSConfig = {
 const osPathConfig = resolve(CurrentPath, "MacOSConfig.yaml");
 if (existsSync(osPathConfig)) OSConfig = yaml.parse(readFileSync(osPathConfig, "utf8"));
 else {
-    console.log("Salvando as Configurações inicias");
+    console.log("Saving Initial Settings, please edit the MacOSConfig.yaml file");
     writeFileSync(osPathConfig, yaml.stringify(OSConfig));
-    console.log("Saindo");
+    console.log("Going out");
     process.exit(0)
 }
 RunQemu.push(
-    `-enable-kvm -m "${OSConfig.ram}" -cpu ${OSConfig.cpu.family},kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,${OSConfig.cpu.options}`,
+    `-enable-kvm -m "${OSConfig.ram}" -cpu ${OSConfig.cpu.family},kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,"${OSConfig.cpu.options}"`,
     `-machine q35`,
     "-usb -device usb-kbd -device usb-tablet",
     `-smp "${OSConfig.cpu.threads}",cores="${OSConfig.cpu.cores}",sockets="${OSConfig.cpu.sockets}"`,
@@ -79,21 +80,36 @@ else {
 }
 
 // Check and create the file if it doesn't exist.
-if (!(existsSync(OSConfig.devices.hd.MacOS.path))) execFileSync("qemu-img",["create", "-f", "qcow2", OSConfig.devices.hd.MacOS.path, `${OSConfig.devices.hd.MacOS.size_gb}G`]);
+if (!(existsSync(OSConfig.devices.hd.MacOS.path))) execSync("qemu-img " + ["create", "-f", "qcow2", OSConfig.devices.hd.MacOS.path, `${OSConfig.devices.hd.MacOS.size_gb}G`].join(" "));
 
-
-(async function(){
-    if (OSConfig.Before.InstallMacOS.enable === true) {
-        if (existsSync(OSConfig.devices.hd.SystemInstaller.path)) rmSync(OSConfig.devices.hd.SystemInstaller.path, {force: true})
-        if (existsSync(join(CurrentPath, "BaseSystem.dmg"))) rmSync(join(CurrentPath, "BaseSystem.dmg"), {force: true})
-        if (existsSync(join(CurrentPath, "BaseSystem.chunklist"))) rmSync(join(CurrentPath, "BaseSystem.chunklist"), {force: true})
-        execFileSync(resolve(__dirname, "./OSX-KVM/fetch-macOS-v2.py"), ["--action", "download", "--os-type", (function(){if (OSConfig.Before.InstallMacOS.system === "default" || OSConfig.Before.InstallMacOS.system === "latest") return OSConfig.Before.InstallMacOS.system; else return "default"})(), "--outdir", CurrentPath], {cwd: CurrentPath})
-        RunQemu.push(`-drive id=InstallMedia,if=none,file="${OSConfig.devices.hd.SystemInstaller.path}",format=raw`);
+if (OSConfig.Before.InstallMacOS.enable === true) {
+    if (OSConfig.Before.InstallMacOS.removeFiles){
+        if (existsSync(OSConfig.Before.InstallMacOS.SystemBasePath)) rmSync(OSConfig.Before.InstallMacOS.SystemBasePath, {force: true})
     }
+    console.log("Downloading BaseSystem.dmg");
+    spawnSync("python3", [resolve(__dirname, "./OSX-KVM/fetch-macOS-v2.py"), "--action", "download", "--os-type", OSConfig.Before.InstallMacOS.system, "--outdir", tmpdir()], {cwd: CurrentPath, encoding: "utf8"})
+    console.log("Converting from dmg to img");
+    spawnSync("qemu-img", ["convert", "BaseSystem.dmg", "-O", "raw", OSConfig.Before.InstallMacOS.SystemBasePath], {cwd: tmpdir(), encoding: "utf8"});
     
-    // Run Qemu
-    console.log("qemu-system-x86_64", RunQemu);
-    const run = execFile("qemu-system-x86_64", RunQemu);
-    run.stdout.on("data", d => console.log(d))
-    run.stderr.on("data", d => console.log(d))
-})()
+    // -
+    rmSync(join(tmpdir(), "BaseSystem.dmg"), {force: true})
+    rmSync(join(tmpdir(), "BaseSystem.chunklist"), {force: true})
+    // -
+    RunQemu.push(`-drive id=InstallMedia,if=none,file="${OSConfig.Before.InstallMacOS.SystemBasePath}",format=raw`);
+}
+
+// Run Qemu
+console.log("starting qemu");
+writeFileSync("test.sh", `qemu-system-x86_64 ${RunQemu.join(" ")}`)
+const RunQemuCommand = spawn("qemu-system-x86_64", RunQemu, {cwd: CurrentPath});
+RunQemuCommand.stdout.on("data", data => {
+    data = data.toString()
+    console.log(data)
+})
+RunQemuCommand.stderr.on("data", data => {
+    data = data.toString()
+    console.log(data)
+})
+
+
+RunQemuCommand.on("exit", code => {console.log(code);})
