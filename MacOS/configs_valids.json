@@ -1,0 +1,63 @@
+{
+    "cpu": {
+        "Penryn": {
+            "opencore": {
+                "main": "Penryn/OpenCore.qcow2"
+            },
+            "ram": 3072,
+            "cpu_name": "Penryn"
+        },
+        "Skylake": {
+            "opencore": {
+                "main": "Penryn/OpenCore.qcow2"
+            },
+            "ram": 3072,
+            "cpu_name": "Skylake-Client"
+        },
+        "Broadwell": {
+            "opencore": {
+                "main": "Penryn/OpenCore.qcow2"
+            },
+            "ram": 3072,
+            "cpu_name": "Broadwell"
+        },
+        "Haswell": {
+            "opencore": {
+                "main": "Penryn/OpenCore.qcow2"
+            },
+            "ram": 3072,
+            "cpu_name": "Haswell"
+        }
+    },
+    "video": {
+        "vnc": {
+            "argv": "-vnc 0.0.0.0:${{PORT}}",
+            "options": {
+                "port": {
+                    "type": "int",
+                    "default": 0
+                }
+            }
+        },
+        "vga": {
+            "argv": "-device VGA,vgamem_mb=${{MEM}}",
+            "options": {
+                "MEM": {
+                    "type": "int",
+                    "default": 128
+                }
+            }
+        }
+    },
+    "network": {
+        "netdev": {
+            "argv": "-netdev user,id=net0 -device vmxnet3,netdev=net0,id=net0,mac=${{mac}}",
+            "options": {
+                "mac": {
+                    "type": "str",
+                    "default": "52:54:00:c9:18:27"
+                }
+            }
+        }
+    }
+}
