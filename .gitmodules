@@ -1,0 +1,4 @@
+[submodule "OSX-KVM"]
+	path = OSX-KVM
+	url = https://github.com/Sirherobrine23/OSX-KVM.git
+	branch = main
