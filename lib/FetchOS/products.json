@@ -1,21 +1,25 @@
 [
     {
-        "name": "High Sierra (10.13)",
+        "name": "High Sierra",
+        "version": 10.13,
         "b": "Mac-7BA5B2D9E42DDD94",
         "m": "00000000000J80300"
     },
     {
-        "name": "Mojave (10.14)",
+        "name": "Mojave",
+        "version": 10.14,
         "b": "Mac-7BA5B2DFE22DDD8C",
         "m": "00000000000KXPG00"
     },
     {
-        "name": "Catalina (10.15)",
+        "name": "Catalina",
+        "version": 10.15,
         "b": "Mac-00BE6ED71E35EB86",
         "m": "00000000000000000"
     },
     {
-        "name": "Big Sur (Latest - 11)",
+        "name": "Big Sur",
+        "version": 11,
         "b": "Mac-E43C1C25D4880AD6",
         "m": "00000000000000000",
         "os_type": "default"

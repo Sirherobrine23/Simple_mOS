@@ -54,6 +54,8 @@ def run_query(url, headers, post=None, raw=False):
     else:
         data = None
 
+    print(data)
+
     req = Request(url=url, headers=headers, data=data)
     response = urlopen(req)
     if raw:
@@ -97,7 +99,7 @@ def get_session(args):
         if header.lower() == 'set-cookie':
             cookies = headers[header].split('; ')
             for cookie in cookies:
-                if cookie.startsWith('session='):
+                if cookie.startswith('session='):
                     return cookie
 
     raise RuntimeError('No session in headers ' + str(headers))
@@ -120,7 +122,7 @@ def get_image_info(session, bid, mlb=MLB_ZERO, diag=False, os_type='default', ci
         'fg': generate_id(TYPE_FG)
     }
 
-    print(post)
+    print('Post: ' + post)
 
     if diag:
         url = 'http://osrecovery.apple.com/InstallationPayload/Diagnostics'
@@ -214,7 +216,7 @@ def action_download(args):
 
     session = get_session(args)
     info = get_image_info(session, bid=args.board_id, mlb=args.mlb,
-                          diag=args.diagnostics, os_type="")
+                          diag=args.diagnostics, os_type="latest")
     if args.verbose:
         print(info)
     print('Downloading ' + info[INFO_PRODUCT] + '...')
