@@ -97,7 +97,7 @@ def get_session(args):
         if header.lower() == 'set-cookie':
             cookies = headers[header].split('; ')
             for cookie in cookies:
-                if cookie.startswith('session='):
+                if cookie.startsWith('session='):
                     return cookie
 
     raise RuntimeError('No session in headers ' + str(headers))
@@ -119,6 +119,8 @@ def get_image_info(session, bid, mlb=MLB_ZERO, diag=False, os_type='default', ci
         'k': generate_id(TYPE_K),
         'fg': generate_id(TYPE_FG)
     }
+
+    print(post)
 
     if diag:
         url = 'http://osrecovery.apple.com/InstallationPayload/Diagnostics'
@@ -143,6 +145,7 @@ def get_image_info(session, bid, mlb=MLB_ZERO, diag=False, os_type='default', ci
         if k not in info:
             raise RuntimeError('Missing key ' + k)
 
+    print(info)
     return info
 
 

@@ -19,6 +19,8 @@
   "homepage": "https://github.com/Sirherobrine23/OSX-KVM_Node#readme",
   "dependencies": {
     "js-yaml": "^4.1.0",
-    "nexe": "^4.0.0-beta.18"
+    "nexe": "^4.0.0-beta.18",
+    "node-fetch": "^2.6.1",
+    "sync-fetch": "^0.3.0"
   }
 }
