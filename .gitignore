@@ -15,8 +15,10 @@ logs
 
 # OS Ignore
 node_modules/
-OSX-KVM
+MacOS/OpenCORE/resources/OcBinaryData
 
 # Nexe out
-MacOSQEMU_*_*
+.Build/*_binarie*
+
+# Config Files
 MacOSConfig.yaml

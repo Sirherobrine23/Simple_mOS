@@ -11,7 +11,7 @@
         },
         "Skylake": {
             "opencore": {
-                "main": "Penryn/OpenCore.qcow2"
+                "main": "Skylake/OpenCore.qcow2"
             },
             "ram": 3072,
             "cpu_name": "Skylake-Client",
@@ -20,7 +20,7 @@
         },
         "Broadwell": {
             "opencore": {
-                "main": "Penryn/OpenCore.qcow2"
+                "main": "Broadwell/OpenCore.qcow2"
             },
             "ram": 3072,
             "cpu_name": "Broadwell",
@@ -29,7 +29,7 @@
         },
         "Haswell": {
             "opencore": {
-                "main": "Penryn/OpenCore.qcow2"
+                "main": "Haswell/OpenCore.qcow2"
             },
             "ram": 3072,
             "cpu_name": "Haswell",
@@ -39,7 +39,7 @@
     },
     "video": {
         "vnc": {
-            "argv": "-vnc 0.0.0.0:${{PORT}}",
+            "command": "-vnc 0.0.0.0:${{PORT}}",
             "options": {
                 "port": {
                     "type": "int",
@@ -48,7 +48,7 @@
             }
         },
         "vga": {
-            "argv": "-device VGA,vgamem_mb=${{MEM}}",
+            "command": "-device VGA,vgamem_mb=${{MEM}}",
             "options": {
                 "MEM": {
                     "type": "int",

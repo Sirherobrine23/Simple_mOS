@@ -1,8 +1,8 @@
 const { resolve, join } = require("path");
-const { existsSync, readFileSync, writeFileSync, rmSync, copyFileSync, appendFile, appendFileSync } = require("fs");
-const { cpus, freemem, tmpdir } = require("os")
+const { existsSync, readFileSync, writeFileSync, rmSync, appendFileSync } = require("fs");
+const { cpus, freemem } = require("os")
 const { cwd, exit } = require("process");
-const { exec, spawnSync, execSync } = require("child_process");
+const { exec, execSync } = require("child_process");
 
 const yaml = {parse: require("js-yaml").load, stringify: require("js-yaml").dump};
 const ConfigsQemu = require("./MacOS/configs_valids.json")
@@ -72,22 +72,25 @@ const Opencore_Path = resolve(__dirname, "MacOS/OpenCORE", OSConfig.spec.cpu.fam
 const BiosBootPath = resolve(__dirname, "MacOS/PFLASH")
 
 console.log("\n\n------------- System Spec");
+
+
+
 RunQemu.push(
-    `-enable-kvm -m "${parseInt(OSConfig.spec.ram.MEM_MB)}"`,
-    `-cpu ${CpuFamily.cpu_name},kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,"${OSConfig.spec.cpu.options}"`,
+    `-enable-kvm`,
+    `-m ${parseInt(OSConfig.spec.ram.MEM_MB)}`,
+    `-cpu ${CpuFamily.cpu_name},kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,${OSConfig.spec.cpu.options}`,
     `-machine q35`,
     "-usb -device usb-kbd -device usb-tablet",
-    `-smp "${OSConfig.spec.cpu.threads}",cores="${OSConfig.spec.cpu.cores}",sockets="${OSConfig.spec.cpu.sockets}"`,
+    `-smp ${OSConfig.spec.cpu.threads},cores=${OSConfig.spec.cpu.cores},sockets=${OSConfig.spec.cpu.sockets}`,
     "-device usb-ehci,id=ehci",
     `-device isa-applesmc,osk="ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"`,
-    `-drive if=pflash,format=raw,readonly,file="${join(BiosBootPath, "OVMF_CODE.fd")}"`,
+    `-drive if=pflash,format=raw,readonly=on,file="${join(BiosBootPath, "OVMF_CODE.fd")}"`,
     `-drive if=pflash,format=raw,file="${join(BiosBootPath, "OVMF_VARS-1024x768.fd")}"`,
     "-smbios type=2",
     "-device ich9-intel-hda -device hda-duplex",
     "-device ich9-ahci,id=sata",
     `-drive id=OpenCoreBoot,if=none,snapshot=on,format=qcow2,file="${join(Opencore_Path, "OpenCore.qcow2")}"`,
     "-device ide-hd,bus=sata.2,drive=OpenCoreBoot",
-    // `-drive id=MacHDD,if=none,file="${OSConfig.devices.hd.MacOS.path}",format=qcow2 -device ide-hd,bus=sata.4,drive=MacHDD`,
     `-netdev user,id=net0 -device vmxnet3,netdev=net0,id=net0,mac=${OSConfig.network.mac}`,
     "-monitor stdio"
 )

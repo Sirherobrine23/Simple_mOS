@@ -1,6 +1,10 @@
 const { resolve, join } = require("path");
-const { execFileSync } = require("child_process");
-const { existsSync, rmSync } = require("fs");
+const { exec } = require("child_process");
+const { existsSync, rmSync, mkdirSync, writeFileSync, appendFileSync } = require("fs");
+const { exit } = require("process");
+
+const LogPath = join(__dirname, "log/")
+if (!(existsSync(LogPath))) mkdirSync(LogPath);
 
 for (let OpenCore of [
     "Broadwell",
@@ -8,9 +12,16 @@ for (let OpenCore of [
     "Penryn",
     "Skylake"
 ]){
+    const OpenCORELogPath = join(LogPath, `${OpenCore}.log`)
+    writeFileSync(OpenCORELogPath, "")
     const Path = resolve(__dirname, OpenCore);
     const PathExec = join(Path, "opencore-image-ng.sh");
     const OpenCoreQCOMPath = join(Path, "OpenCore.qcow2")
     if (existsSync(OpenCoreQCOMPath)) rmSync(OpenCoreQCOMPath, {force: true})
-    console.log(execFileSync(`sudo ${PathExec} --cfg config.plist --img OpenCore.qcow2`, {cwd: Path}).toString());
+    
+    const Exec = exec(`sudo bash ${PathExec} --cfg config.plist --img OpenCore.qcow2`, {cwd: Path});
+    function log(data = ""){data.split("\n").filter(d=>{return (!(d === "" || d === " "))}).forEach(d=>console.log(`${OpenCore} log: ${d}`)); appendFileSync(OpenCORELogPath, data)}
+    Exec.stdout.on("data", d=>log(d))
+    Exec.stderr.on("data", d=>log(d))
+    Exec.on("exit", c => {log(`code exit: ${c}`);exit(c)})
 }
