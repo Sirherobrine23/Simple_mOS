@@ -16,9 +16,6 @@ Guestfish output results may vary across platforms.
 ```
 # Normal OpenCore Image
 rm -f OpenCore.qcow2; sudo ./opencore-image-ng.sh --cfg config.plist --img OpenCore.qcow2
-
-# OpenCore w/ ShowPicker Disabled
-rm -f OpenCore-nopicker.qcow2; sudo ./opencore-image-ng.sh --cfg config-nopicker.plist --img OpenCore-nopicker.qcow2
 ```
 
 Note: https://github.com/thenickdude/KVM-Opencore is one of the best resources
