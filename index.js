@@ -62,11 +62,11 @@ else {
 
 const CpuFamily = ConfigsQemu.cpu[OSConfig.spec.cpu.family]
 // Ram Family Limit
-if (CpuFamily.ram <= OSConfig.spec.ram) {console.log("RAM limit reached for this family"); OSConfig.spec.ram = CpuFamily.ram}
+if (CpuFamily.ram >= OSConfig.spec.ram) {console.log("RAM limit reached for this family"); OSConfig.spec.ram = CpuFamily.ram}
 // Core Family Limit
-if (CpuFamily.core <= OSConfig.spec.cores) {console.log("Number of Cores reached for this processor family"); OSConfig.spec.cores = CpuFamily.core}
+if (CpuFamily.core >= OSConfig.spec.cores) {console.log("Number of Cores reached for this processor family"); OSConfig.spec.cores = CpuFamily.core}
 // Threads Family Limit
-if (CpuFamily.threads <= OSConfig.spec.threads) {console.log("Number of Threads Reaching Processor Family Limit"); OSConfig.spec.threads = CpuFamily.threads}
+if (CpuFamily.threads >= OSConfig.spec.threads) {console.log("Number of Threads Reaching Processor Family Limit"); OSConfig.spec.threads = CpuFamily.threads}
 
 const Opencore_Path = resolve(__dirname, "MacOS/OpenCORE", OSConfig.spec.cpu.family);
 const BiosBootPath = resolve(__dirname, "MacOS/PFLASH")
