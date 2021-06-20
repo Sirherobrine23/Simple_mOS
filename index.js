@@ -99,7 +99,7 @@ console.log("\n\n------------- Storage");
 // Storage
 for (let _HDD of OSConfig.storage){
     // const HDD = ConfigsQemu.harddisk[_HDD.TYPE]
-    var HDD = ConfigsQemu.harddisk["qcow2"]
+    var HDD = ConfigsQemu.harddisk[_HDD.TYPE]
     // Create Image
     if (!(existsSync(_HDD.PATH)) && (HDD.type === "virtual")) execSync(`qemu-img create -f ${_HDD.TYPE} ${_HDD.PATH} ${_HDD.SIZE_GB}G`);
     var command = HDD.command.split("${{PATH}}").join(_HDD.PATH)
