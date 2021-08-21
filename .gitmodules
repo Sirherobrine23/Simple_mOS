@@ -2,3 +2,6 @@
 	path = MacOS/OpenCORE/resources/OcBinaryData
 	url = https://github.com/acidanthera/OcBinaryData.git
 	branch = master
+[submodule "src/OsxKvm_kholia"]
+	path = src/OsxKvm_kholia
+	url = https://github.com/kholia/OSX-KVM
