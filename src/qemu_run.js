@@ -99,9 +99,9 @@ function Start(){
         if (!(Config.display.password)) console.log("VNC Password:", RandomPassword);
         Argv.push("-vnc", `:${Config.display.port || 1},password=on`);
     } else if (Config.display.type.toLowerCase() === "vga") {
-        Argv.push("-device", `VGA,vgamem_mb=${Config.display.vgamem_mb}`);
+        Argv.push("-device", `VGA,vgamem_mb=${Config.display.vgamem_mb || 128}`);
     } else if (Config.display.type.toLowerCase() === "qxl") {
-        Argv.push("-device", `qxl-vga,id=video0,vram_size=${Config.display.vram_size}`);
+        Argv.push("-device", `qxl-vga,id=video0,vram_size=${Config.display.vram_size || 128}`);
     } else {
         console.log("Display type not supported");
     }

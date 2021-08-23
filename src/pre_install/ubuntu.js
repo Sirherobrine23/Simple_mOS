@@ -56,7 +56,7 @@ const IntelKVMConfig = () => {
 }
 
 module.exports = async () => {
-    if (parseInt(os_release.VERSION_ID) >= 20) {
+    if (/focal|bullseye/.test(os_release.VERSION_CODENAME.toLowerCase())) {
         try {
             console.log("Ubuntu pre-installation");
             console.log("Installing packages");
