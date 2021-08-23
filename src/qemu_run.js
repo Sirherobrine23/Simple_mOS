@@ -42,12 +42,12 @@ function Start(){
         "-smp", `${Config.VM.CPU_THREADS},cores=${Config.VM.CPU_CORES},sockets=${Config.VM.CPU_SOCKETS}`,
         "-device", "usb-ehci,id=ehci",
         "-device", "isa-applesmc,osk=\"ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc\"",
-        "-drive", `if=pflash,format=raw,readonly,file="${path.resolve(__dirname, "./OsxKvm_kholia/OVMF_CODE.fd")}"`,
-        "-drive", `if=pflash,format=raw,file="${OVMF_VARS_User}"`,
+        "-drive", `if=pflash,format=raw,readonly,file=${path.resolve(__dirname, "./OsxKvm_kholia/OVMF_CODE.fd")}`,
+        "-drive", `if=pflash,format=raw,file=${OVMF_VARS_User}`,
         "-smbios", "type=2",
-        "-device", "ich9-intel-hda -device hda-duplex",
+        "-device", "ich9-intel-hda", "-device", "hda-duplex",
         "-device", "ich9-ahci,id=sata",
-        "-drive", `id=OpenCoreBoot,if=none,snapshot=on,format=qcow2,file="${OpenCORE_User}"`,
+        "-drive", `id=OpenCoreBoot,if=none,snapshot=on,format=qcow2,file=${OpenCORE_User}`,
         "-device", "ide-hd,bus=sata.2,drive=OpenCoreBoot",
         "-netdev", "user,id=net0", "-device", "vmxnet3,netdev=net0,id=net0,mac=52:54:00:c9:18:27",
         "-monitor", "stdio"
@@ -65,7 +65,7 @@ function Start(){
         // Add Base System
         Argv.push(
             "-device", "ide-hd,bus=sata.3,drive=InstallMedia",
-            "-drive", `id=InstallMedia,if=none,file="${BaseSystem}",format=raw`
+            "-drive", `id=InstallMedia,if=none,file=${BaseSystem},format=raw`
         );
     }
 
@@ -78,7 +78,7 @@ function Start(){
                 try {child_process.execSync(`umount "${Disk.device}"`); console.log(`umounted ${Disk.device}`);} catch(e){}
                 if (Disk.lock) {
                     Argv.push(
-                        "-drive", `id=${RandomID},if=none,file="${Disk.device}",format=raw`,
+                        "-drive", `id=${RandomID},if=none,file=${Disk.device},format=raw`,
                         "-device", `ide-hd,bus=sata.${SataNumber},drive=${RandomID}`
                     );
                 }
@@ -86,7 +86,7 @@ function Start(){
         } else {
             if (!(fs.existsSync(Disk.file))) child_process.execSync(`qemu-img create -f qcow2 "${Disk.file}" ${Disk.size}G`);
             Argv.push(
-                "-drive", `id=${RandomID},if=none,file="${Disk.file}",format=qcow2`,
+                "-drive", `id=${RandomID},if=none,file=${Disk.file},format=qcow2`,
                 "-device", `ide-hd,bus=sata.${SataNumber},drive=${RandomID}`
             );
         }
