@@ -3,6 +3,18 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 
+// Read os-release
+const os_release = {};
+fs.readFileSync("/etc/os-release", "utf8").split(/\n|\t/gi).map(line => {
+    if (line) {
+        const splited = line.split(/=/);
+        return {
+            input: splited[0],
+            value: splited[1].replace(/^"|"$/g, ""),
+        }
+    } else return false;
+}).filter(a => a).forEach(a => os_release[a.input] = a.value);
+
 // Install required packages
 function Packages(){
     return new Promise((resolve, reject) => {
@@ -44,20 +56,26 @@ const IntelKVMConfig = () => {
 }
 
 module.exports = async () => {
-    try {
-        console.log("Ubuntu pre-installation");
-        console.log("Installing packages");
-        if (await Packages()) {
-            console.log("Configuring KVM");
-            if (KVM_ignore_msrs()) {
-                console.log("Configuring Intel KVM");
-                IntelKVMConfig();
-                return true;
-            } else console.log("Failed to ignore MSRs");
+    if (parseInt(os_release.VERSION_ID) >= 20) {
+        try {
+            console.log("Ubuntu pre-installation");
+            console.log("Installing packages");
+            if (await Packages()) {
+                console.log("Configuring KVM");
+                if (KVM_ignore_msrs()) {
+                    console.log("Configuring Intel KVM");
+                    IntelKVMConfig();
+                    return true;
+                } else console.log("Failed to ignore MSRs");
+            }
+            return false;
+        } catch (e) {
+            console.log(e);
+            return false;
         }
-        return false;
-    } catch (e) {
-        console.log(e);
-        return false;
+    } else {
+        console.log("Updateto Ubuntu 20.01 or higher required");
+        console.log("Use do-release-upgrade to update ubuntu");
+        process.exit(1);
     }
 }

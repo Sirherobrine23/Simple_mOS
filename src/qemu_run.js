@@ -65,7 +65,7 @@ function Start(){
         // Add Base System
         Argv.push(
             "-device", "ide-hd,bus=sata.3,drive=InstallMedia",
-            "-drive", `id=InstallMedia,if=none,file=${BaseSystem},format=raw`
+            "-drive", `id=InstallMedia,if=none,file=${BaseSystem},format=qcow2`,
         );
     }
 
@@ -97,7 +97,7 @@ function Start(){
     const RandomPassword = Math.random().toString(36).substring(2, 6) + Math.random().toString(36).substring(2, 6);
     if (Config.display.type.toLowerCase() === "vnc") {
         if (!(Config.display.password)) console.log("VNC Password:", RandomPassword);
-        Argv.push("-vnc", `:${Config.display.port || 5901},password=on`);
+        Argv.push("-vnc", `:${Config.display.port || 1},password=on`);
     } else if (Config.display.type.toLowerCase() === "vga") {
         Argv.push("-device", `VGA,vgamem_mb=${Config.display.vgamem_mb}`);
     } else if (Config.display.type.toLowerCase() === "qxl") {
@@ -112,6 +112,11 @@ function Start(){
         RandomPassword,
         disks: SataNumber,
     };
+    if (Config.display.type.toLowerCase() === "vnc") {
+        console.log("VNC Password:", RandomPassword);
+        console.log("VNC Port:", Config.display.port || 1);
+        VM.stdin.write(`change vnc password ${Config.display.password || RandomPassword}\n`);
+    }
     return global.QemuRuns;
 }
 

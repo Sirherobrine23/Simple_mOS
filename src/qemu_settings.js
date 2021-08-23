@@ -38,7 +38,7 @@ let Config = {
     ],
     display: {
         type: "vnc",
-        port: 5900,
+        port: 5901,
         password: "",
     }
 }
