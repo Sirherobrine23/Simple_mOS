@@ -15,10 +15,10 @@ logs
 
 # OS Ignore
 node_modules/
-MacOS/OpenCORE/resources/OcBinaryData
-
-# Nexe out
-.Build/*_binarie*
 
 # Config Files
 MacOSConfig.yaml
+BaseSystem.qcow2
+OpenCore_User.qcow2
+OVMF_VARS-1024x768.fd
+KVM-Settings.yaml
