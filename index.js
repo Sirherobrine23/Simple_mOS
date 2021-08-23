@@ -61,12 +61,17 @@ const cli_color = require("cli-color");
             await ubuntu();
         }
     }
-
     // run qemu
+    const Log = (data = "") => {
+        if (KVM_Config().display.password) data = data.replace(RegExp(KVM_Config().display.password, "gi"), "***");
+        if (/audio|ALSA/gi.test(data)) data = data.split(/\n/g).filter(x => !(/audio|ALSA/gi.test(x))).join("\n");
+        // Log
+        process.stdout.write(data);
+    }
     console.log(cli_color.green("Starting QEMU..."));
     const run = QEMURUN();
-    run.VM.stdout.on("data", (data) => process.stdout.write(data));
-    run.VM.stderr.on("data", (data) => process.stdout.write(data));
+    run.VM.stdout.on("data", Log);
+    run.VM.stderr.on("data", Log);
     console.log(cli_color.green("QEMU is running!"));
     console.log(cli_color.green(`It started with ${run.disks} disks`));
 })()

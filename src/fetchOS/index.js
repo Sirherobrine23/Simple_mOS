@@ -37,7 +37,6 @@ function FetchOS(System = "Catalina"){
         System = RegExp(System.toLowerCase().trim());
         for (let SystemArray of MacOS_Products) {
             if (System.test(SystemArray.name)) SystemJSON = SystemArray;
-            else console.log(`${SystemArray.name} does not match ${System}`);
         }
     }
     // check

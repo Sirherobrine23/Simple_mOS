@@ -41,7 +41,7 @@ function Start(){
         "-usb", "-device", "usb-kbd", "-device", "usb-tablet",
         "-smp", `${Config.VM.CPU_THREADS},cores=${Config.VM.CPU_CORES},sockets=${Config.VM.CPU_SOCKETS}`,
         "-device", "usb-ehci,id=ehci",
-        "-device", "isa-applesmc,osk=\"ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc\"",
+        "-device", "isa-applesmc,osk=ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc",
         "-drive", `if=pflash,format=raw,readonly,file=${path.resolve(__dirname, "./OsxKvm_kholia/OVMF_CODE.fd")}`,
         "-drive", `if=pflash,format=raw,file=${OVMF_VARS_User}`,
         "-smbios", "type=2",
@@ -70,19 +70,19 @@ function Start(){
     }
 
     // HD
-    let SataNumber = 4
+    let SataNumber = 5;
     for (let Disk of Config.disk){
         const RandomID = (Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)).replace(/[0-9]/gi, "")
         if (Disk.device) {
-            if (typeof Disk.lock === "boolean") {
-                try {child_process.execSync(`umount "${Disk.device}"`); console.log(`umounted ${Disk.device}`);} catch(e){}
-                if (Disk.lock) {
-                    Argv.push(
-                        "-drive", `id=${RandomID},if=none,file=${Disk.device},format=raw`,
-                        "-device", `ide-hd,bus=sata.${SataNumber},drive=${RandomID}`
-                    );
-                }
-            } else console.log(Disk.device, "Should be a boolean on the lock option");
+            try {
+                child_process.execSync(`umount "${Disk.device}"`); console.log(`umounted ${Disk.device}`);
+            } catch(e){
+                console.log(cli_color.redBright(`${Disk.device} is not mounted`));
+            }
+            Argv.push(
+                "-drive", `id=${RandomID},if=none,file=${Disk.device},format=raw`,
+                "-device", `ide-hd,bus=sata.${SataNumber},drive=${RandomID}`
+            ); 
         } else {
             if (!(fs.existsSync(Disk.file))) child_process.execSync(`qemu-img create -f qcow2 "${Disk.file}" ${Disk.size}G`);
             Argv.push(
@@ -105,7 +105,9 @@ function Start(){
     } else {
         console.log("Display type not supported");
     }
-
+    console.log("\n\n");
+    console.log("qemu-system-x86_64", Argv.join(" "));
+    console.log("\n\n");
     const VM = child_process.execFile("qemu-system-x86_64", Argv);
     global.QemuRuns = {
         VM,
