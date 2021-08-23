@@ -97,7 +97,7 @@ function Start(){
     const RandomPassword = Math.random().toString(36).substring(2, 6) + Math.random().toString(36).substring(2, 6);
     if (Config.display.type.toLowerCase() === "vnc") {
         if (!(Config.display.password)) console.log("VNC Password:", RandomPassword);
-        Argv.push("-vnc", `:${Config.display.port || 5901},password="${Config.display.password || RandomPassword}"`);
+        Argv.push("-vnc", `:${Config.display.port || 5901},password=on`);
     } else if (Config.display.type.toLowerCase() === "vga") {
         Argv.push("-device", `VGA,vgamem_mb=${Config.display.vgamem_mb}`);
     } else if (Config.display.type.toLowerCase() === "qxl") {
