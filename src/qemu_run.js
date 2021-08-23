@@ -72,13 +72,13 @@ function Start(){
     // HD
     let SataNumber = 4
     for (let Disk of Config.disk){
-        const RandomID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        const RandomID = (Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)).replace(/[0-9]/gi, "")
         if (Disk.device) {
             if (typeof Disk.lock === "boolean") {
                 try {child_process.execSync(`umount "${Disk.device}"`); console.log(`umounted ${Disk.device}`);} catch(e){}
                 if (Disk.lock) {
                     Argv.push(
-                        "-drive", `id=${RandomID},if=none,file="${Disk.path}",format=raw`,
+                        "-drive", `id=${RandomID},if=none,file="${Disk.device}",format=raw`,
                         "-device", `ide-hd,bus=sata.${SataNumber},drive=${RandomID}`
                     );
                 }
