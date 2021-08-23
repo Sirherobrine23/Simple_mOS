@@ -29,7 +29,7 @@ let Config = {
     disk: [
         {
             size: 50,
-            file: path.resolve(RootPath, ".MacOS_Storage", "MacOSHDD.qcow2"),
+            file: path.resolve(RootPath, "MacOSHDD.qcow2"),
         },
         {
             device: "/dev/sdb",
