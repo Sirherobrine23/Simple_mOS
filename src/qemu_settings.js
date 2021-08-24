@@ -17,6 +17,7 @@ let Config = {
     },
     VM: {
         ALLOCATED_RAM: 3072, // mib size
+        CPU_MODEL: "Penryn",
         CPU_SOCKETS: 1,
         CPU_CORES: 2,
         CPU_THREADS: 4,

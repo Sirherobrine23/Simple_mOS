@@ -36,7 +36,7 @@ function Start(){
     if (!(fs.existsSync(OpenCORE_User))) fs.copyFileSync(path.resolve(__dirname, "./OsxKvm_kholia/OpenCore-Catalina/OpenCore.qcow2"), OpenCORE_User);
     
     const Argv = [
-        "-enable-kvm", "-m", `${Config.VM.ALLOCATED_RAM}`, "-cpu", `Penryn,kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,${Config.VM.MORE_OPTIONS}`,
+        "-enable-kvm", "-m", `${Config.VM.ALLOCATED_RAM}`, "-cpu", `${Config.VM.CPU_MODEL || "Penryn"},kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,${Config.VM.MORE_OPTIONS}`,
         "-machine", "q35",
         "-usb", "-device", "usb-kbd", "-device", "usb-tablet",
         "-smp", `${Config.VM.CPU_THREADS},cores=${Config.VM.CPU_CORES},sockets=${Config.VM.CPU_SOCKETS}`,
@@ -51,7 +51,7 @@ function Start(){
         "-device", "ide-hd,bus=sata.2,drive=OpenCoreBoot",
         "-netdev", "user,id=net0", "-device", "vmxnet3,netdev=net0,id=net0,mac=52:54:00:c9:18:27",
         "-monitor", "stdio",
-        "-vga", "virtio"
+        "-vga", "vmware"
     ];
     
     if (Config.macos.installer) {
