@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "cli-color": "^2.0.0",
+    "convert-units": "^2.3.4",
     "js-yaml": "^4.1.0",
     "minimist": "^1.2.5",
     "readline-sync": "^1.4.10"

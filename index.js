@@ -6,6 +6,7 @@ const KVM_Config = require("./src/qemu_settings");
 const cli_arg = require("minimist")(process.argv.slice(2));
 const PackageJSon = require("./package.json");
 const cli_color = require("cli-color");
+
 (async () => {
     // help
     if (cli_arg.h || cli_arg.help) {
@@ -73,5 +74,5 @@ const cli_color = require("cli-color");
     run.VM.stdout.on("data", Log);
     run.VM.stderr.on("data", Log);
     console.log(cli_color.green("QEMU is running!"));
-    console.log(cli_color.green(`It started with ${run.disks} disks`));
+    console.log(cli_color.green(`It started with ${run.disks - 5} disks`));
 })()
