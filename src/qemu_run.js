@@ -50,7 +50,8 @@ function Start(){
         "-drive", `id=OpenCoreBoot,if=none,snapshot=on,format=qcow2,file=${OpenCORE_User}`,
         "-device", "ide-hd,bus=sata.2,drive=OpenCoreBoot",
         "-netdev", "user,id=net0", "-device", "vmxnet3,netdev=net0,id=net0,mac=52:54:00:c9:18:27",
-        "-monitor", "stdio"
+        "-monitor", "stdio",
+        "-vga", "virtio"
     ];
     
     if (Config.macos.installer) {
