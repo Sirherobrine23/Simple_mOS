@@ -63,6 +63,7 @@ function Start(){
         "-machine", "q35",
         "-usb", "-device", "usb-kbd", "-device", "usb-tablet",
         "-smp", `${Config.VM.CPU_THREADS},cores=${Config.VM.CPU_CORES},sockets=${Config.VM.CPU_SOCKETS}`,
+        "-no-reboot", "-no-shutdown",
         "-device", "usb-ehci,id=ehci",
         "-device", "isa-applesmc,osk=ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc",
         "-drive", `if=pflash,format=raw,readonly,file=${path.resolve(__dirname, "./OsxKvm_kholia/OVMF_CODE.fd")}`,
