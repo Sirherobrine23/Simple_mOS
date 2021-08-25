@@ -14,7 +14,7 @@ function CreateSystemD() {
         "",
         "[Service]",
         "Type=simple",
-        "Restart=on-failure",
+        "Restart=always",
         "RestartSec=5s",
         `User=${os.userInfo().username}`,
         `ExecStart=/usr/bin/node "${path.resolve(__dirname, "../index.js")}"`,

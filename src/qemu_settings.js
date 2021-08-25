@@ -31,10 +31,6 @@ let Config = {
         {
             size: 50,
             file: path.resolve(RootPath, "MacOSHDD.qcow2"),
-        },
-        {
-            device: "/dev/sdb",
-            lock: false,
         }
     ],
     display: {
