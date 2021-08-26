@@ -58,26 +58,48 @@ function Start(){
     // Check low ram memory
     if (RAM_MEMORY <= 3000) throw new Error("Low ram Memory");
 
+    // CPU Options
+    let OptionsCPU
+    if (Config.VM.MORE_OPTIONS) OptionsCPU = `,${Config.VM.MORE_OPTIONS}`; else OptionsCPU = ""
+
+    // QEMU Config
     Argv.push(
-        "-enable-kvm", "-m", `${RAM_MEMORY}`, "-cpu", `${Config.VM.CPU_MODEL || "Penryn"},kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,${Config.VM.MORE_OPTIONS}`,
-        "-machine", "q35",
-        "-usb", "-device", "usb-kbd", "-device", "usb-tablet",
+        // VM Basic info
+        "-enable-kvm", "-m", `${RAM_MEMORY}`, "-cpu", `${Config.VM.CPU_MODEL || "Penryn"},kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on${OptionsCPU}`,
+        "-machine", "q35,accel=kvm",
         "-smp", `${Config.VM.CPU_THREADS},cores=${Config.VM.CPU_CORES},sockets=${Config.VM.CPU_SOCKETS}`,
-        "-no-reboot", "-no-shutdown",
+        // USB Controller
+        "-usb",
         "-device", "usb-ehci,id=ehci",
+        "-device", "usb-kbd",
+        "-device", "usb-tablet",
+        // BIOS
         "-device", "isa-applesmc,osk=ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc",
         "-drive", `if=pflash,format=raw,readonly,file=${path.resolve(__dirname, "./OsxKvm_kholia/OVMF_CODE.fd")}`,
         "-drive", `if=pflash,format=raw,file=${OVMF_VARS_User}`,
         "-smbios", "type=2",
-        "-device", "ich9-intel-hda", "-device", "hda-duplex",
+        // Sata Controller
+        "-device", "ich9-intel-hda",
+        "-device", "hda-duplex",
         "-device", "ich9-ahci,id=sata",
+        // OpenCore Bootloader
         "-drive", `id=OpenCoreBoot,if=none,snapshot=on,format=qcow2,file=${OpenCORE_User}`,
         "-device", "ide-hd,bus=sata.2,drive=OpenCoreBoot",
-        "-netdev", "user,id=net0", "-device", "vmxnet3,netdev=net0,id=net0,mac=52:54:00:c9:18:27",
+        // Internet interface
+        "-netdev", "user,id=net0",
+        "-device", "vmxnet3,netdev=net0,id=net0,mac=52:54:00:c9:18:27",
+        // Sound
+        "-soundhw", "hda",
+        // Monitor Adapter
         "-monitor", "stdio",
-        "-vga", "vmware"
+        "-device",
+        "virtio-gpu-pci,virgl=on", // 14MB
+        // "virtio-vga,virgl=on", // 7MB
+        // "vmware-svga", // 7MB
+        // "qxl-vga", // 7MB
     );
     
+    // MacOS Installer
     if (Config.macos.installer) {
         // Fetch Base System
         const BaseSystem = path.resolve(QemuConfig.get_path_to_storage(), "BaseSystem.qcow2");
@@ -99,11 +121,7 @@ function Start(){
     for (let Disk of Config.disk){
         const RandomID = (Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)).replace(/[0-9]/gi, "")
         if (Disk.device) {
-            try {
-                child_process.execSync(`umount "${Disk.device}"`); console.log(`umounted ${Disk.device}`);
-            } catch(e){
-                console.log(cli_color.redBright(`${Disk.device} is not mounted`));
-            }
+            try {child_process.execSync(`umount "${Disk.device}"`);console.log(`umounted ${Disk.device}`);} catch(e){console.log(cli_color.redBright(`${Disk.device} is not mounted`))}
             Argv.push(
                 "-drive", `id=${RandomID},if=none,file=${Disk.device},format=raw`,
                 "-device", `ide-hd,bus=sata.${SataNumber},drive=${RandomID}`

@@ -1,6 +1,7 @@
 const os = require("os");
 const child_process = require("child_process");
 const path = require("path");
+const fs = require("fs");
 const SystemDFile = "/etc/systemd/system/MacOSStart.service";
 
 
@@ -23,8 +24,11 @@ function CreateSystemD() {
         "[Install]",
         "WantedBy=multi-user.target"
     ];
-    // Write file with sudo
-    child_process.execSync(`echo '${File.join("\n")}' | sudo tee "${SystemDFile}"`);
+    // Write file
+    const TempFile = path.resolve(os.tmpdir(), `MacKVM.service`);
+    fs.writeFileSync(TempFile, File.join("\n"), "utf8");
+    // Copy file
+    child_process.execSync(`sudo cp -f "${TempFile}" "${SystemDFile}"`);
     // Show Path of file
     console.log(">:", SystemDFile);
     // Restart systemd
