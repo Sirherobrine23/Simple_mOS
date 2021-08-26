@@ -1,11 +1,11 @@
-# OSX-KVM_Node
+# The Simple mOS
 
-[base](https://github.com/kholia/OSX-KVM)
+An easy way to verify and deploy a VM for testing or daily use of MacOS within Linux systems.
 
-## requirements
+All work is on kholia/OSX-KVM who is the main author of the Base Scripts. [Repository](https://github.com/kholia/OSX-KVM)
 
-Debian >= 11 or Ubuntu >= 20.01
+## System/Host requirements
 
-QEMU >= 5.1 or QEMU >= 4.1
+QEMU >= 5.1 (Debian 11)
 
-KVM Support
+KVM Support (All system is virtualized inside kvm for better performance)
