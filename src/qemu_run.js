@@ -70,7 +70,6 @@ function Start(){
         "-smp", `${Config.VM.CPU_THREADS},cores=${Config.VM.CPU_CORES},sockets=${Config.VM.CPU_SOCKETS}`,
         // USB Controller
         "-usb",
-        "-device", "usb-ehci,id=ehci",
         "-device", "usb-kbd",
         "-device", "usb-tablet",
         // BIOS

@@ -29,13 +29,12 @@ function CreateSystemD() {
     fs.writeFileSync(TempFile, File.join("\n"), "utf8");
     // Copy file
     child_process.execSync(`sudo cp -f "${TempFile}" "${SystemDFile}"`);
-    // Show Path of file
-    console.log(">:", SystemDFile);
+    console.log(TempFile, "->", SystemDFile);
     // Restart systemd
     child_process.execSync("sudo systemctl daemon-reload");
     // Enable service
     child_process.execSync(`sudo systemctl enable ${path.basename(SystemDFile)}`);
-    return File.join("\n");
+    return true;
 }
 
 const RemoveSystemD = () => {
