@@ -92,8 +92,8 @@ function Start(){
         // Monitor Adapter
         "-monitor", "stdio",
         "-device",
-        "virtio-gpu-pci,virgl=on", // 14MB
-        // "virtio-vga,virgl=on", // 7MB
+        // "virtio-gpu-pci,virgl=on", // 14MB
+        "virtio-vga,virgl=on", // 7MB
         // "vmware-svga", // 7MB
         // "qxl-vga", // 7MB
     );
