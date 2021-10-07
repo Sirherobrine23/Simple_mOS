@@ -60,7 +60,7 @@ function FetchOS(System = "Catalina"){
 
     console.log(`Downloading BaseSystem for ${SystemJSON.name}`);
     try {
-        child_process.execFileSync(Python, [path.resolve(__dirname, "../OsxKvm_kholia/fetch-macOS-v2.py"), ...ArgV], {cwd: RandomPath}).toString();
+        child_process.execFileSync(Python, [path.resolve(__dirname, "../../OsxKvm_kholia/fetch-macOS-v2.py"), ...ArgV], {cwd: RandomPath}).toString();
         return {
             System: path.join(RandomPath, "BaseSystem.dmg"),
             Chunklist: path.join(RandomPath, "BaseSystem.chunklist"),
