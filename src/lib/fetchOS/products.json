@@ -38,5 +38,16 @@
             "sse4_1": true,
             "avx": true
         }
+    },
+    {
+        "name": "monterey",
+        "version": 12,
+        "b": "Mac-7BA5B2D9E42DDD94",
+        "m": "00000000000000000",
+        "os_type": "latest",
+        "requirements": {
+            "sse4_1": true,
+            "avx": true
+        }
     }
 ]
