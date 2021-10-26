@@ -1,0 +1,3 @@
+[submodule "src/OsxKvm_kholia"]
+	path = src/OsxKvm_kholia
+	url = https://github.com/kholia/OSX-KVM
