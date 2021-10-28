@@ -3,51 +3,31 @@
         "name": "high sierra",
         "version": 10.13,
         "b": "Mac-7BA5B2D9E42DDD94",
-        "m": "00000000000J80300",
-        "requirements": {
-            "sse4_1": true
-        }
+        "m": "00000000000J80300"
     },
     {
         "name": "mojave",
         "version": 10.14,
         "b": "Mac-7BA5B2DFE22DDD8C",
-        "m": "00000000000KXPG00",
-        "requirements": {
-            "sse4_1": true,
-            "avx": true
-        }
+        "m": "00000000000KXPG00"
     },
     {
         "name": "catalina",
         "version": 10.15,
         "b": "Mac-00BE6ED71E35EB86",
-        "m": "00000000000000000",
-        "requirements": {
-            "sse4_1": true,
-            "avx": true
-        }
+        "m": "00000000000000000"
     },
     {
         "name": "big sur",
-        "version": 11,
-        "b": "Mac-E43C1C25D4880AD6",
-        "m": "00000000000000000",
-        "os_type": "default",
-        "requirements": {
-            "sse4_1": true,
-            "avx": true
-        }
+        "version": 11.6,
+        "b": "Mac-2BD1B31983FE1663",
+        "m": "00000000000000000"
     },
     {
         "name": "monterey",
         "version": 12,
         "b": "Mac-7BA5B2D9E42DDD94",
         "m": "00000000000000000",
-        "os_type": "latest",
-        "requirements": {
-            "sse4_1": true,
-            "avx": true
-        }
+        "os_type": "latest"
     }
 ]
