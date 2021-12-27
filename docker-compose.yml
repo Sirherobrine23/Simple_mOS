@@ -1,0 +1,14 @@
+version: "3.9"
+volumes:
+  MacOSDisks:
+services:
+  macos:
+    build: .
+    container_name: MacOSOnKVM
+    volumes:
+      - MacOSDisks:/root/.Simples_mOS
+    devices:
+      - /dev/kvm
+    ports:
+      - "5801:5801"
+      - "5901:5901"

@@ -8,11 +8,12 @@ const PathControl = require("../lib/Storage_Files_Path");
 // "virtio-vga,virgl=on", // 7MB
 // "vmware-svga", // 7MB
 // "qxl-vga", // 7MB
+//  VGA,vgamem_mb=128 // 128MB
 
 const ConfigFile = path.join(PathControl, "Display.yaml");
 let DisplayConfig = {
-  Display_Adapter: "vmware-svga",
-  options: [],
+  Display_Adapter: "VGA",
+  options: ["vgamem_mb=128"],
   vnc: {
     password: Math.random().toString(36).substring(2, 15).slice(0, 8),
     port: 1
@@ -31,7 +32,7 @@ function Get_QEMU_Command() {
   return {
     Command: [
       "-monitor", "stdio",
-      "-vnc", ":" + DisplayConfig.vnc.port,
+      "-vnc", ":" + DisplayConfig.vnc.port+",password",
       "-device", Arg
     ],
     VncCommand: `change vnc password ${DisplayConfig.vnc.password}`,

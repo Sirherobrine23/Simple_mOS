@@ -10,7 +10,7 @@ let DiskConfig = {
   disk_path: path.join(PathControl, "Disks"),
   install_system: {
     enable: true,
-    os: "mojave",
+    os: "monterey",
     path: path.join(PathControl, "Disks/Base_System.qcow2"),
   },
   opencore_bootloader: {
@@ -21,7 +21,7 @@ let DiskConfig = {
     {
       name: "Os_System",
       type: "file",
-      size: "80G",
+      size: "100G",
       path: path.join(PathControl, "Disks", "Os_System"),
     },
     {
@@ -41,7 +41,7 @@ if (fs.existsSync(ConfigFile)) {
     {
       name: "Os_System",
       type: "file",
-      size: "80G",
+      size: "100G",
       path: path.join(PathControl, "Disks", "Os_System"),
     }
   ];

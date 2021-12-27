@@ -1,4 +1,3 @@
-const child_process = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
@@ -23,7 +22,7 @@ function Start(){
     
     // OpenCORE
     const OpenCORE_User = Disk.GetConfig().opencore_bootloader.path;
-    if (!(fs.existsSync(OpenCORE_User))) fs.copyFileSync(path.resolve(__dirname, "./OsxKvm_kholia/OpenCore-Catalina/OpenCore.qcow2"), OpenCORE_User);
+    if (!(fs.existsSync(OpenCORE_User))) fs.copyFileSync(path.resolve(__dirname, "./OsxKvm_kholia/OpenCore/OpenCore.qcow2"), OpenCORE_User);
     
     let RAM_MEMORY = Config.ram_memory;
     // Memory free with percentage
@@ -69,14 +68,15 @@ function Start(){
         "-device", "usb-tablet",
         // BIOS
         "-device", "isa-applesmc,osk=ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc",
-        "-drive", `if=pflash,format=raw,readonly,file=${path.resolve(__dirname, "./OsxKvm_kholia/OVMF_CODE.fd")}`,
+        "-drive", `if=pflash,format=raw,readonly=on,file=${path.resolve(__dirname, "./OsxKvm_kholia/OVMF_CODE.fd")}`,
         "-drive", `if=pflash,format=raw,file=${OVMF_VARS_User}`,
         "-smbios", "type=2",
         // Internet interface
         "-netdev", "user,id=net0",
-        "-device", `vmxnet3,netdev=net0,id=net0,mac=${Config.Network.MAC || "52:54:00:c9:18:27"}`,
+        // "-device", `vmxnet3,netdev=net0,id=net0,mac=${Config.Network.MAC || "52:54:00:c9:18:27"}`,
+        "-device", `virtio-net-pci,netdev=net0,id=net0,mac=${Config.Network.MAC || "52:54:00:c9:18:27"}`,
         // Sound
-        "-soundhw", "hda",
+        "-device", "intel-hda", "-device", "hda-duplex",
         // Disks
         ...DiskArray,
         // Monitor Adapter

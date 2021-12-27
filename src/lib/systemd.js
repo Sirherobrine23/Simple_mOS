@@ -4,7 +4,6 @@ const path = require("path");
 const fs = require("fs");
 const SystemDFile = "/etc/systemd/system/MacOSStart.service";
 
-
 function CreateSystemD() {
     const File = [
         "[Unit]",
