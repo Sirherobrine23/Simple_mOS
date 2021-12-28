@@ -9,8 +9,8 @@ const save = () => fs.writeFileSync(ConfigFile, js_yaml.dump(DiskConfig));
 let DiskConfig = {
   disk_path: path.join(PathControl, "Disks"),
   install_system: {
-    enable: true,
-    os: "monterey",
+    enable: false,
+    os: process.env.SYSTEM_NAME || "monterey",
     path: path.join(PathControl, "Disks/Base_System.qcow2"),
   },
   opencore_bootloader: {
@@ -41,7 +41,7 @@ if (fs.existsSync(ConfigFile)) {
     {
       name: "Os_System",
       type: "file",
-      size: "100G",
+      size: process.env.SYSTEM_SIZE || "100G",
       path: path.join(PathControl, "Disks", "Os_System"),
     }
   ];

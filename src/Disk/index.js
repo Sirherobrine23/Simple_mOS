@@ -22,8 +22,8 @@ function Get_QEMU_Command() {
   sata_id++;
   
   // Os Base Installer
-  if (Config.install_system.enable) {
-    const InstallerPath = getOSIntaller(Config.install_system.os);
+  if (process.env.INSTALL_SYSTEM === "true" || Config.install_system.enable) {
+    const InstallerPath = getOSIntaller(process.env.SYSTEM_NAME || Config.install_system.os);
     if (fs.existsSync(Config.install_system.path)) fs.rmSync(Config.install_system.path);
     execFileSync("qemu-img", ["convert", "-O", "qcow2", InstallerPath.System, Config.install_system.path]);
     Command_Array.push(
@@ -54,7 +54,10 @@ function Get_QEMU_Command() {
         );
       }
     } else {
-      if (!(fs.existsSync(Disk.path))) execFileSync("qemu-img", ["create" , "-f", "qcow2", Disk.path+".qcow2", Disk.size]);
+      if (!(fs.existsSync(Disk.path+".qcow2"))) {
+        console.log("Created Disk:", Disk.path, "Size:", Disk.size)
+        execFileSync("qemu-img", ["create" , "-f", "qcow2", Disk.path+".qcow2", Disk.size]);
+      }
       Command_Array.push(
         "-drive", `id=${RandomID},if=none,file=${Disk.path+".qcow2"},format=qcow2`,
         "-device", `ide-hd,bus=sata.${sata_id},drive=${RandomID}`

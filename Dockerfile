@@ -12,4 +12,10 @@ WORKDIR /app
 ENTRYPOINT [ "node", "Docker.js" ]
 COPY ./package*.json ./
 RUN npm install --no-save -d
+
+ENV \
+  SYSTEM_SIZE="200G" \
+  SYSTEM_NAME="monterey" \
+  INSTALL_SYSTEM="false"
+
 COPY ./ ./

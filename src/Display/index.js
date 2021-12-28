@@ -32,7 +32,7 @@ function Get_QEMU_Command() {
   return {
     Command: [
       "-monitor", "stdio",
-      "-vnc", ":" + DisplayConfig.vnc.port+",password",
+      "-vnc", ":" + DisplayConfig.vnc.port+",password=on",
       "-device", Arg
     ],
     VncCommand: `change vnc password ${DisplayConfig.vnc.password}`,
