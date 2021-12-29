@@ -10,7 +10,7 @@ services:
     devices:
       - /dev/kvm
     environment:
-      INSTALL_SYSTEM: "true"
+      INSTALL_SYSTEM: "false"
       SYSTEM_NAME: "catalina"
       SYSTEM_SIZE: "250G"
     ports:
