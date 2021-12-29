@@ -11,7 +11,7 @@ services:
       - /dev/kvm
     environment:
       INSTALL_SYSTEM: "true"
-      SYSTEM_NAME: "monterey"
+      SYSTEM_NAME: "catalina"
       SYSTEM_SIZE: "250G"
     ports:
       - "5801:5801"

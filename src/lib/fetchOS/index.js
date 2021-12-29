@@ -47,7 +47,7 @@ function FetchOS(System = "Catalina"){
     // Add add argv output files
     const RandomPath = path.resolve(os.tmpdir(), "Fetch_OS_BaseSystem");
     fs.mkdirSync(RandomPath, {recursive: true});
-    ArgV.push("--action", "download", "--outdir", RandomPath);
+    ArgV.push("--action", "download", "--outdir", RandomPath, "--verbose");
 
     // OS Type
     if (SystemJSON.os_type) ArgV.push("--os-type", SystemJSON.os_type);
@@ -60,7 +60,7 @@ function FetchOS(System = "Catalina"){
 
     console.log(`Downloading BaseSystem for ${SystemJSON.name}`);
     try {
-        child_process.execFileSync(Python, [path.resolve(__dirname, "../../OsxKvm_kholia/fetch-macOS-v2.py"), ...ArgV], {cwd: RandomPath}).toString();
+        child_process.execFileSync(Python, [path.resolve(__dirname, "../../OsxKvm_kholia/fetch-macOS-v2.py"), ...ArgV], {cwd: RandomPath, stdio: "inherit"});
         return {
             System: path.join(RandomPath, "BaseSystem.dmg"),
             Chunklist: path.join(RandomPath, "BaseSystem.chunklist"),
