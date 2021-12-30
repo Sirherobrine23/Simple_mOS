@@ -82,7 +82,7 @@ function Start(){
     Argv.push(
         // VM Basic info
         "-enable-kvm", "-m", `${RAM_MEMORY}`, "-cpu", `${CPUModel || "Penryn"},kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on${OptionsCPU}`,
-        "-machine", "q35,accel=kvm",
+        "-machine", "q35,accel=kvm,kernel-irqchip=split",
         "-smp", `${Threads},cores=${Cores},sockets=${CPUSockets}`,
         // USB Controller
         "-usb",

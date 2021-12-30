@@ -31,7 +31,7 @@ function Get_QEMU_Command() {
   if (DisplayConfig.options.length > 0) Arg += "," + DisplayConfig.options.join(",");
   return {
     Command: [
-      "-device", process.env.ISDOCKER === "true" ? "vmware-svga" : Arg
+      "-device", process.env.ISDOCKER === "true" ? "VGA,vgamem_mb=128" : Arg
     ],
     VncCommand: `change vnc password ${DisplayConfig.vnc.password}`,
   };

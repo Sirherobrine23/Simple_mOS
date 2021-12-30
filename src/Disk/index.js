@@ -17,6 +17,7 @@ function Get_QEMU_Command() {
   // OpenCore Bootloader Disk
   Command_Array.push(
     "-drive", `id=OpenCoreBoot,if=none,snapshot=on,format=qcow2,file=${Config.opencore_bootloader.path}`,
+    // "-drive", `id=OpenCoreBoot,if=none,format=qcow2,file=${Config.opencore_bootloader.path}`,
     "-device", `ide-hd,bus=sata.${sata_id},drive=OpenCoreBoot`,
   );
   sata_id++;
