@@ -48,22 +48,45 @@ function Start(){
 
     // Check low ram memory
     if (RAM_MEMORY <= 3000) throw new Error("Low ram Memory");
-
-    // CPU Options
-    let OptionsCPU
-    if (Config.CPU.QemuOptions.length > 0) OptionsCPU = "," + Config.CPU.QemuOptions.join(","); else OptionsCPU = ""
-
     const DiskArray = Disk.Get_QEMU_Command();
     const DisplayArray = Display.Get_QEMU_Command();
+    
+    // CPU Options
+    let OptionsCPU = "";
+    if (Config.CPU.QemuOptions.length > 0) OptionsCPU = "," + Config.CPU.QemuOptions.join(",");
+    let Threads = Config.CPU.Threads;
+    let Cores = Config.CPU.Cores;
+    let CPUSockets = Config.CPU.Sockets;
+    let NetworkMAC = Config.Network.MAC;
+    let CPUModel = Config.CPU.Model;
+    if (process.env.ISDOCKER === "true") {
+        RAM_MEMORY = parseInt(os.freemem() / (1024 * 1024))
+        Threads = Cores = os.cpus().length;
+        CPUSockets = 1;
+        // if (((Threads / 2) % 2) === 0) CPUSockets = Threads / 2;
+        const NetworkInterfaces = os.networkInterfaces();
+        NetworkMAC = NetworkInterfaces[Object.keys(NetworkInterfaces).filter(key => NetworkInterfaces[key][0].internal === false)[0]][0].mac;
+        if (/[Ii]ntel/gi.test(os.cpus()[0].model)) CPUModel = "host";
 
+        console.log("");
+        console.log("RAM MEMORY:", RAM_MEMORY);
+        console.log("Threads:", Threads);
+        console.log("Cores:", Cores);
+        console.log("CPU Sockets:", CPUSockets);
+        console.log("Network MAC:", NetworkMAC);
+        console.log("CPU Model:", CPUModel);
+        console.log("");
+    }
+    
     // QEMU Config
     Argv.push(
         // VM Basic info
-        "-enable-kvm", "-m", `${RAM_MEMORY}`, "-cpu", `${Config.CPU.Model || "Penryn"},kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on${OptionsCPU}`,
+        "-enable-kvm", "-m", `${RAM_MEMORY}`, "-cpu", `${CPUModel || "Penryn"},kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on${OptionsCPU}`,
         "-machine", "q35,accel=kvm",
-        "-smp", `${Config.CPU.Threads},cores=${Config.CPU.Cores},sockets=${Config.CPU.Sockets}`,
+        "-smp", `${Threads},cores=${Cores},sockets=${CPUSockets}`,
         // USB Controller
         "-usb",
+        // "-device", "qemu-xhci",
         "-device", "usb-kbd",
         "-device", "usb-tablet",
         // BIOS
@@ -73,14 +96,16 @@ function Start(){
         "-smbios", "type=2",
         // Internet interface
         "-netdev", "user,id=net0",
-        "-device", `vmxnet3,netdev=net0,id=net0,mac=${Config.Network.MAC || "52:54:00:c9:18:27"}`,
+        "-device", `vmxnet3,netdev=net0,id=net0,mac=${NetworkMAC || "52:54:00:c9:18:27"}`,
         // "-device", `virtio-net-pci,netdev=net0,id=net0,mac=${Config.Network.MAC || "52:54:00:c9:18:27"}`,
         // Sound
         "-device", "intel-hda", "-device", "hda-duplex",
         // Disks
         ...DiskArray,
         // Monitor Adapter
-        ...DisplayArray.Command
+        "-monitor", "stdio",
+        "-vnc", ":1,password=on",
+        ...DisplayArray.Command,
     );
 
     return {

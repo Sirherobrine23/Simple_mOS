@@ -16,6 +16,7 @@ if (process.env.LOG_DEBUG === "true") {
   ProcessQemu.stdout.on("data", data => process.stdout.write(data));
   ProcessQemu.stderr.on("data", data => process.stderr.write(data));
 }
-console.log(Command.command, ...Command.arg, ...Command.PostStart);
+console.log("QEMU Command:", Command.command, ...Command.arg);
+console.log("Post Start:", ...Command.PostStart);
 
 ProcessQemu.stdin.write(Command.PostStart.join("\n")+"\n");
