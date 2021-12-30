@@ -1,28 +1,21 @@
-#!/usr/bin/env node
 const child_process = require("child_process");
+const os = require("os");
 const fs = require("fs");
 const path = require("path");
-const inquirer = require("inquirer");
-const ProcessArg = require("minimist")(process.argv.slice(2));
+const Main = require("./src/index");
+const Command = Main.Get_Command();
+const ProcessQemu = child_process.execFile(Command.command, Command.arg);
+ProcessQemu.on("exit", code => process.exit(code));
 
-// Import src/index.js
-const Simples_mOS = require("./src/index");
+const LogFile = path.resolve(os.homedir(), `DockerLog_${(new Date()).getTime()}.log`);
+const LogStream = fs.createWriteStream(LogFile);
+ProcessQemu.stdout.on("data", data => LogStream.write(data));
+ProcessQemu.stderr.on("data", data => LogStream.write(data));
 
-// Start Command
-function Start() {
-  const Command = Simples_mOS.Get_Command();
-  const ProcessCommand = child_process.execFile(Command.command, Command.arg);
-  ProcessCommand.stdout.on("data", (data) => process.stdout.write(data));
-  ProcessCommand.stderr.on("data", (data) => process.stdout.write(data));
-  ProcessCommand.on("exit", code => process.exit(code));
-  setTimeout(() => Command.PostStart.forEach(Command => ProcessCommand.stdin.write(Command+"\n")), 1000);
-  return ProcessCommand;
+if (process.env.LOG_DEBUG === "true") {
+  ProcessQemu.stdout.on("data", data => process.stdout.write(data));
+  ProcessQemu.stderr.on("data", data => process.stderr.write(data));
 }
+console.log(Command.command, ...Command.arg, ...Command.PostStart);
 
-async function Interactive() {
-
-}
-
-console.log(ProcessArg);
-if (ProcessArg["no_interactive"]) Start();
-else Interactive();
+ProcessQemu.stdin.write(Command.PostStart.join("\n")+"\n");

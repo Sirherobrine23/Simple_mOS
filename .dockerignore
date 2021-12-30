@@ -1,6 +1,5 @@
 node_modules/
 .git/
 src/OsxKvm_kholia/.git/
-Docker*
-docker*
-!Docker.js
+/Docker*
+/docker*

@@ -6,16 +6,10 @@ RUN \
   apt install -y nodejs && \
   npm install -g npm@latest
 RUN apt install -y python3-pip python3 qemu uml-utilities virt-manager libguestfs-tools qemu-block-extra
-
-# Copy APP
+RUN apt install -y alsa-utils ffmpeg pulseaudio pulseaudio-utils
 WORKDIR /app
-ENTRYPOINT [ "node", "Docker.js" ]
+ENTRYPOINT [ "bash", "entry.sh" ]
 COPY ./package*.json ./
 RUN npm install --no-save -d
-
-ENV \
-  SYSTEM_SIZE="200G" \
-  SYSTEM_NAME="monterey" \
-  INSTALL_SYSTEM="false"
-
+ENV SYSTEM_SIZE="200G" SYSTEM_NAME="monterey" INSTALL_SYSTEM="false"
 COPY ./ ./

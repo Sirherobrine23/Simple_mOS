@@ -13,6 +13,7 @@ services:
       INSTALL_SYSTEM: "false"
       SYSTEM_NAME: "catalina"
       SYSTEM_SIZE: "250G"
+      LOG_DEBUG: "true"
     ports:
       - "5801:5801"
       - "5901:5901"

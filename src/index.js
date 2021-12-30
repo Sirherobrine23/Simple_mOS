@@ -73,8 +73,8 @@ function Start(){
         "-smbios", "type=2",
         // Internet interface
         "-netdev", "user,id=net0",
-        // "-device", `vmxnet3,netdev=net0,id=net0,mac=${Config.Network.MAC || "52:54:00:c9:18:27"}`,
-        "-device", `virtio-net-pci,netdev=net0,id=net0,mac=${Config.Network.MAC || "52:54:00:c9:18:27"}`,
+        "-device", `vmxnet3,netdev=net0,id=net0,mac=${Config.Network.MAC || "52:54:00:c9:18:27"}`,
+        // "-device", `virtio-net-pci,netdev=net0,id=net0,mac=${Config.Network.MAC || "52:54:00:c9:18:27"}`,
         // Sound
         "-device", "intel-hda", "-device", "hda-duplex",
         // Disks
