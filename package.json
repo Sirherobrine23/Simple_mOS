@@ -29,7 +29,7 @@
     "inquirer": "^8.2.0",
     "js-yaml": "^4.1.0",
     "minimist": "^1.2.5",
-    "ora": "^6.0.1",
+    "ora": "^6.1.0",
     "readline-sync": "^1.4.10"
   }
 }
