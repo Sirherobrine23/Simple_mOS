@@ -23,7 +23,7 @@
     "node": ">=16"
   },
   "dependencies": {
-    "cli-color": "^2.0.1",
+    "cli-color": "^2.0.2",
     "convert-units": "^2.3.4",
     "deepmerge": "^4.2.2",
     "inquirer": "^8.2.2",
