@@ -1,3 +1,9 @@
+# No support for project
+
+after a while of inactivity of this project, i will consider it deprecated as i will no longer maintain it.
+
+hope everyone can use the original `kholia/OSX-KVM` project.
+
 # The Simple mOS
 
 An easy way to verify and deploy a VM for testing or daily use of MacOS within Linux systems.
